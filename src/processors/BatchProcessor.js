@@ -343,7 +343,12 @@ export class BatchProcessor {
       }
       
       const csvContent = csvRows.join('\n');
-      await fs.writeFile(csvPath, csvContent, 'utf8');
+      
+      // Add UTF-8 BOM for proper Japanese text display in Excel
+      const utf8BOM = '\uFEFF';
+      const csvWithBOM = utf8BOM + csvContent;
+      
+      await fs.writeFile(csvPath, csvWithBOM, 'utf8');
       
       console.log(`Results exported to: ${csvPath}`);
       return csvPath;
