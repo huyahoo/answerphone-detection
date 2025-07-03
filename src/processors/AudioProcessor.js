@@ -133,7 +133,7 @@ export class AudioProcessor {
   static async processAudio(baseId) {
     const startTime = Date.now();
     
-    console.log(`🎵 Processing audio: ${baseId}`);
+    console.log(`Processing audio: ${baseId}`);
     
     // Define file paths
     const dataFile = `${PATHS.DATA_DIR}/${baseId}_data`;

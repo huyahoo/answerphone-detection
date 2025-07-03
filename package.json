@@ -8,7 +8,9 @@
     "start": "node index.js",
     "wav": "node scripts/binaryDataToWav.js",
     "text": "node scripts/speechToText.js",
-    "test": "node test/test-suite.js"
+    "batch": "node index.js --folder",
+    "export-csv": "node index.js --folder data/20250702 --export-csv",
+    "single": "node index.js --file"
   },
   "keywords": [
     "answering-machine",
@@ -17,7 +19,6 @@
     "native-javascript"
   ],
   "author": "Huy",
-  "license": "MIT",
   "dependencies": {
     "@google-cloud/speech": "^6.0.0"
   },
