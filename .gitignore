@@ -1,0 +1,10 @@
+# Dependencies
+/node_modules
+
+# Build output
+/output
+
+# Credentials
+credentials
+
+/docs

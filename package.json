@@ -1,0 +1,27 @@
+{
+  "name": "answerphone-detection",
+  "version": "1.0.0",
+  "description": "Convert binary audio data to WAV and transcribe to text",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "wav": "node scripts/binaryDataToWav.js",
+    "text": "node scripts/speechToText.js",
+    "test": "node test/test-suite.js"
+  },
+  "keywords": [
+    "answering-machine",
+    "speech-recognition", 
+    "audio-processing",
+    "native-javascript"
+  ],
+  "author": "Huy",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/speech": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 

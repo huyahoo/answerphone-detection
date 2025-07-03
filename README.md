@@ -1,230 +1,110 @@
-# 🤖 Answering Machine Detection - Organized Structure
+# Answering Machine Detection
 
-A simple but professional native JavaScript implementation for detecting answering machines using Google Cloud Speech-to-Text API.
+This module performs two core functions:
+1. **dataから音声を復元する** - Convert binary audio data to WAV format
+2. **復元した音声から文字起こしをする** - Transcribe WAV audio to text transcription
 
-## 📁 Project Structure
+## Setup
 
-```
-answerphone-detection/
-├── 📂 src/                     # Core source code
-│   ├── 📂 processors/          # Audio and speech processing
-│   │   ├── AudioProcessor.js   # Audio data → WAV conversion
-│   │   ├── SpeechProcessor.js  # WAV → Speech-to-text
-│   │   └── WavHeaderGenerator.js # WAV header creation
-│   ├── 📂 config/              # Configuration files
-│   │   └── AudioConfig.js      # Audio specs & paths
-│   └── 📂 utils/               # Utility functions (future)
-├── 📂 scripts/                 # Executable scripts
-│   ├── audio-to-wav.js         # Phase 1: Binary → WAV
-│   ├── speech-recognition.js   # Phase 2: WAV → Text
-│   └── full-pipeline.js        # Complete pipeline
-├── 📂 test/                    # Test suite
-│   └── test-suite.js           # Comprehensive tests
-├── 📂 credentials/             # API credentials
-│   └── google-speech-api.json  # Google Cloud credentials
-├── 📂 data/                    # Input data files
-├── 📂 output/                  # Generated outputs
-├── 📂 docs/                    # Documentation
-│   └── project-overview.md     # Project background
-├── package.json               # Dependencies & scripts
-├── index.js                   # Main entry point
-└── README.md                  # This file
-```
-
-## 🚀 Quick Start
-
-### Installation
+1. Install dependencies:
 ```bash
+cd data-2-wav-2-text
 npm install
 ```
 
-### Usage Options
+2. Set up Google Cloud credentials:
+   - Place Google Cloud Speech API credentials file in `credentials/google-speech-api.json`
 
-**Option 1: Complete Pipeline**
+3. Place data files in the `data/` directory:
+   - `{id}_data` - Binary audio data file
+   - `{id}_timeSize` - Timing information file
+
+## Usage
+
+### Main Script (index.js)
+
+Example
 ```bash
-npm start                    # Process default file
-npm start 1751421215833      # Process specific file
+node index.js 1751421215833
 ```
 
-**Option 2: Individual Phases**
+Process both steps automatically:
 ```bash
-npm run phase1              # Audio preprocessing only
-npm run phase2              # Speech recognition only  
+node index.js [baseId]
 ```
 
-**Option 3: Direct Script Execution**
+Convert binary data to WAV only:
 ```bash
-node scripts/audio-to-wav.js
-node scripts/speech-recognition.js
-node scripts/full-pipeline.js
+node index.js --wav-only [baseId]
 ```
 
-**Testing**
+Convert WAV to text only:
 ```bash
-npm test                     # Run comprehensive test suite
+node index.js --text-only [baseId]
 ```
 
-## 📋 Features
-
-### Phase 1: Audio Preprocessing
-- ✅ **Binary to WAV conversion** with proper headers
-- ✅ **Timing data parsing** from Asterisk WebSocket format
-- ✅ **Data validation** and consistency checks
-- ✅ **Error handling** with helpful messages
-
-### Phase 2: Speech Recognition  
-- ✅ **Google Cloud Speech API v2** integration
-- ✅ **Japanese/English language support** with fallback
-- ✅ **Phone call optimized** model and settings
-- ✅ **Basic answering machine detection** patterns
-
-### Quality Features
-- ✅ **Native ES modules** with modern JavaScript
-- ✅ **Comprehensive error handling** with guidance
-- ✅ **Performance tracking** and detailed logging
-- ✅ **Memory management** and file size limits
-- ✅ **Cross-platform compatibility**
-
-## 🔧 Configuration
-
-### Audio Specifications
-- **Format**: PCM 16-bit, 8000Hz, Mono
-- **Chunk Size**: 320 bytes (Asterisk standard)
-- **Max File Size**: 50MB
-- **Timeout**: 30 seconds
-
-### File Paths
-Configure in `src/config/AudioConfig.js`:
-```javascript
-export const PATHS = {
-  DATA_DIR: './data',
-  OUTPUT_DIR: './output', 
-  CREDENTIALS: './credentials/google-speech-api.json'
-};
+Show help:
+```bash
+node index.js --help
 ```
 
-## 📊 Data Format
+### Individual Scripts
 
-### Input Files
-```
-data/
-├── {id}_data          # Binary audio data
-└── {id}_timeSize      # Timing: "timestamp/size,timestamp/size"
+Convert binary data to WAV:
+```bash
+node scripts/binaryDataToWav.js [baseId]
 ```
 
-### Example Timing Format
-```
-0/320,38/320,76/320,114/320
-```
-- Each entry: `timestamp_ms/byte_count`
-- Comma-separated timing entries
-
-## 📝 Scripts Description
-
-| Script | Purpose | Input | Output |
-|--------|---------|-------|--------|
-| `audio-to-wav.js` | Phase 1 preprocessing | Binary data + timing | WAV file |
-| `speech-recognition.js` | Phase 2 transcription | WAV file | Text transcription |
-| `full-pipeline.js` | Complete workflow | Binary data | Text + detection |
-
-## 🧪 Testing
-
-The test suite validates:
-- ✅ Configuration constants
-- ✅ WAV header generation
-- ✅ Timing data parsing
-- ✅ Answering machine detection logic
-- ✅ File existence and validation
-- ✅ Google Cloud credentials
-- ✅ Output directory setup
-
-## 🤖 Answering Machine Detection
-
-### Detection Patterns
-
-**Japanese Patterns:**
-- 留守番電話, 留守電, 不在
-- ただいま, 外出中
-- メッセージ, お話しください
-
-**English Patterns:**
-- voicemail, answering machine
-- leave a message, after the tone
-- not available, away from
-
-### Usage Example
-```javascript
-import { detectAnsweringMachine } from './scripts/speech-recognition.js';
-
-const isAnsweringMachine = detectAnsweringMachine('留守番電話です');
-// Returns: true
+Convert WAV to text:
+```bash
+node scripts/speechToText.js [baseId]
 ```
 
-## 🔑 Google Cloud Setup
+## File Structure
 
-1. **Create credentials file:**
-   ```
-   credentials/google-speech-api.json
-   ```
+```
+answerphone-detection/
+├── index.js                    # Main script
+├── scripts/
+│   ├── binaryDataToWav.js     # Convert binary data to WAV
+│   └── speechToText.js        # Convert WAV to text
+├── src/
+│   ├── config/
+│   │   └── AudioConfig.js     # Audio configuration
+│   └── processors/
+│       ├── AudioProcessor.js  # Audio processing logic
+│       ├── SpeechProcessor.js # Speech-to-text processing
+│       └── WavHeaderGenerator.js # WAV header generation
+├── data/                      # Input data files
+├── output/                    # Generated WAV and text files
+├── credentials/               # Google Cloud credentials
+└── test/                      # Test files
+```
 
-2. **Required fields:**
-   ```json
-   {
-     "type": "service_account",
-     "project_id": "your-project",
-     "private_key": "...",
-     "client_email": "..."
-   }
-   ```
+## Audio Specifications
 
-3. **API requirements:**
-   - Google Cloud Speech-to-Text API enabled
-   - Service account with Speech API permissions
+- **Format**: PCM 16-bit, 8000Hz, mono
+- **Input**: Binary audio data with timing information
+- **Output**: WAV files and text transcriptions
 
-## 📈 Performance
+## Examples
 
-### Processing Stats
-- **Phase 1**: ~0.1-0.5s for typical audio files
-- **Phase 2**: ~2-5s depending on audio length and API latency
-- **Memory**: Efficient streaming with minimal memory footprint
-- **Accuracy**: Optimized for Japanese telephony audio
+Process default file (1751421215833):
+```bash
+node index.js
+```
 
-## 🛠️ Development
+Process specific file:
+```bash
+node index.js 1751421215833
+```
 
-### Adding New Features
-1. **Processors**: Add to `src/processors/`
-2. **Configuration**: Update `src/config/AudioConfig.js`
-3. **Scripts**: Create in `scripts/` directory
-4. **Tests**: Add to `test/test-suite.js`
+Convert to WAV only:
+```bash
+node index.js 1751421215833 --wav-only
+```
 
-### Code Style
-- ES modules with modern syntax
-- Static methods for processors
-- Comprehensive error handling
-- Clear separation of concerns
-
-## 🔮 Roadmap
-
-### Phase 3: Machine Learning
-- [ ] **Feature extraction** from transcriptions
-- [ ] **ML model training** for classification
-- [ ] **Accuracy evaluation** and optimization
-- [ ] **Real-time processing** capabilities
-
-### Enhancements
-- [ ] **Audio quality improvement** (noise reduction)
-- [ ] **Multiple language support**
-- [ ] **Confidence scoring** improvements
-- [ ] **Docker containerization**
-
-## 📞 Support
-
-For issues or questions:
-1. Check the **test suite** output for diagnostics
-2. Verify **file paths** and permissions
-3. Validate **Google Cloud credentials**
-4. Review **error messages** for specific guidance
-
-## 📜 License
-
-MIT License - See LICENSE file for details. 
+Convert to text only (requires existing WAV file):
+```bash
+node index.js 1751421215833 --text-only
+``` 
