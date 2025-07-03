@@ -104,7 +104,7 @@ export class BatchProcessor {
       
       // Step 3: Analyze for answering machine
       const answeringMachineDetected = this.detectAnsweringMachine(
-        textResult.transcription.bestTranscript
+        textResult.transcription.transcribeText
       );
       
       // Restore original data directory
@@ -126,8 +126,8 @@ export class BatchProcessor {
         transcription: textResult,
         answeringMachine: {
           detected: answeringMachineDetected,
-          transcript: textResult.transcription.bestTranscript,
-          confidence: textResult.transcription.bestConfidence
+          transcript: textResult.transcription.transcribeText,
+          confidence: textResult.transcription.transcribeConfidence
         }
       };
       
@@ -321,7 +321,8 @@ export class BatchProcessor {
         'txtファイルパス',
         '処理時間',
         '成功',
-        'エラー'
+        'エラー',
+        '手動判定',
       ];
       
       // Generate CSV rows
@@ -337,7 +338,8 @@ export class BatchProcessor {
           result.success ? `"${result.transcription.files.txtFile}"` : '',
           `"${result.processingTime}"`,
           result.success ? 'TRUE' : 'FALSE',
-          result.success ? '' : `"${(result.error || '').replace(/"/g, '""')}"`
+          result.success ? '' : `"${(result.error || '').replace(/"/g, '""')}"`,
+          '' // Manual judgment column - empty by default
         ];
         csvRows.push(row.join(','));
       }

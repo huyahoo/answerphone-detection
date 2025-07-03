@@ -15,12 +15,12 @@ async function speechToText(baseId = '1751421215833') {
     // console.log('Total words:', result.transcription.totalWords);
     // console.log('Average confidence:', (result.transcription.averageConfidence * 100).toFixed(1) + '%');
     
-    if (result.transcription.bestTranscript) {
-      console.log('Best transcript:', result.transcription.bestTranscript);
-      console.log('Best confidence:', (result.transcription.bestConfidence * 100).toFixed(1) + '%');
+    if (result.transcription.transcribeText) {
+      console.log('Combined transcript:', result.transcription.transcribeText);
+      console.log('Combined confidence:', (result.transcription.transcribeConfidence * 100).toFixed(1) + '%');
       
       // Simple answering machine detection
-      const isAnsweringMachine = detectAnsweringMachine(result.transcription.bestTranscript);
+      const isAnsweringMachine = detectAnsweringMachine(result.transcription.transcribeText);
       console.log('Answering machine detected:', isAnsweringMachine ? 'YES' : 'NO');
     } else {
       console.log('No transcription found - might be silence or noise');

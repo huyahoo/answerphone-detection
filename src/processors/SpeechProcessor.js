@@ -141,10 +141,24 @@ export class SpeechProcessor {
       }
     }
     
+    // Combine all transcripts with confidence > 0 to create transcribeText
+    const validTranscripts = transcripts.filter(t => t.confidence > 0);
+    const transcribeText = validTranscripts
+      .map(t => t.transcript.trim())
+      .filter(text => text.length > 0)
+      .join('');
+    
+    // Calculate combined confidence as average of valid transcripts
+    const transcribeConfidence = validTranscripts.length > 0
+      ? validTranscripts.reduce((sum, t) => sum + t.confidence, 0) / validTranscripts.length
+      : 0;
+    
     return {
       transcripts,
       bestTranscript: bestTranscript.trim(),
       bestConfidence,
+      transcribeText: transcribeText.trim(),
+      transcribeConfidence,
       totalWords,
       isEmpty: transcripts.length === 0,
       averageConfidence: transcripts.length > 0 
@@ -189,8 +203,15 @@ export class SpeechProcessor {
     lines.push(`Success: ${result.success}`);
     lines.push('');
     
+    if (result.transcribeText) {
+      lines.push('=== COMBINED TRANSCRIPT ===');
+      lines.push(result.transcribeText);
+      lines.push(`Combined Confidence: ${(result.transcribeConfidence * 100).toFixed(1)}%`);
+      lines.push('');
+    }
+    
     if (result.bestTranscript) {
-      lines.push('=== BEST TRANSCRIPT ===');
+      lines.push('=== BEST SINGLE TRANSCRIPT ===');
       lines.push(result.bestTranscript);
       lines.push(`Confidence: ${(result.bestConfidence * 100).toFixed(1)}%`);
       lines.push('');
